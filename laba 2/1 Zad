@@ -1,0 +1,261 @@
+import random
+
+
+class BinaryTree:
+    def __init__(self, root):
+        self.root = root
+        self.rChild, self.lChild = None, None
+
+    def insert(self, el):
+        if self.root:
+            if el == self.root:
+                print(str(el) + " уже есть в дереве, мы не будем добавлять его повторно")
+            if el < self.root:
+                if self.lChild is None:
+                    self.lChild = BinaryTree(el)
+                else:
+                    self.lChild.insert(el)
+            if el > self.root:
+                if self.rChild is None:
+                    self.rChild = BinaryTree(el)
+                else:
+                    self.rChild.insert(el)
+        else:
+            self.root = el
+
+    def search(self, el):
+        pathToEl = ""
+        if self.root:
+            if self.root == el:
+                return pathToEl
+            if self.root > el:
+                if self.lChild == None:
+                    return str(el) + " не найден"
+                pathToEl += "L"
+                k = self.lChild.search(el)
+                if k == str(el) + " не найден":
+                    return str(el) + " не найден"
+                else:
+                    pathToEl += k
+                    return pathToEl
+            if self.root < el:
+                if self.rChild == None:
+                    return str(el) + " не найден"
+                pathToEl += "R"
+                k = self.rChild.search(el)
+                if k == str(el) + " не найден":
+                    return str(el) + " не найден"
+                else:
+                    pathToEl += k
+                    return pathToEl
+        else:
+            pathToEl = str(el) + " не найден"
+            return pathToEl
+
+def binSearch (arr, x):
+    i = 0
+    j = len(arr) - 1
+    m = int(j / 2)
+    while arr[m] != x and i < j:
+        if x > arr[m]:
+             i = m + 1
+        else:
+              j = m - 1
+        m = int((i + j) / 2)
+    if i < j or i == j and arr[m] != x:
+        return 'Нет такого'
+    else:
+        return m
+
+def fib(n):
+    if n == 0 or n ==1:
+        return n
+    k, l = 0, 1
+    while n > 1:
+        sum = k + l
+        k = l
+        l = sum
+        n = n-1
+    return sum
+
+"""def fibSearch(arr, x, a, b):
+    if x < arr[0]:
+        return -1
+    l = 0
+    for i in range (a, b):
+        k = fib(i-a)
+        if k > len(arr):
+            l = l +1
+            k = len(arr) - 1
+            if (l == 2):
+                return -1
+        if x == arr[k+a]:
+            return i
+        if x < arr[k+a]:
+            a = fib(i-a-1)
+            b = k
+            fibSearch(arr, x, a, b)"""
+
+def fibSearch(arr, x):
+    if x < arr[0]:
+        return -1
+    if x > arr[len(arr) - 1]:
+        return -1
+    if len(arr) == 1 and arr[0] != x:
+        return -1
+    #l = 0
+    n = 0
+    index = -1
+    while (fib(n)<len(arr)-1):
+        n = n + 1
+    for i in range (0, n+1):
+        k = fib(i)
+        if k >= len(arr):
+            k = len(arr) - 1
+          #  l = l + 1
+        #if l == 2:
+          #  return -1
+        if x == arr[k]:
+            return k
+        if x < arr[k]:
+            arr2 = []
+            for j in range (fib(i-1), k):
+                arr2.append(arr[j])
+            m = fibSearch(arr2, x)
+            if m == -1:
+                index = -1
+            else:
+                index = fib(i - 1) + m
+            break
+    return index
+
+def interSearch(arr, x):
+    i = 0
+    j = len(arr) - 1
+    k = 0
+    if x < arr[0]:
+        return -1
+    while i <= j:
+        if i == j:
+            if arr[j] == x:
+                return i + k
+            return -1
+        d = int((j-i)*(x-arr[i])/(arr[j]-arr[i]))
+        if arr[d+i] == x:
+            return d + i
+        if arr[d+ i] < x:
+            i = i + d + 1
+            k = i - 1
+            continue
+        if arr[d+i] > x:
+            j = d - 1
+    return -1
+
+
+n = int(input("Введите размера массива: "))
+arr = []
+for i in range (n):
+    x = random.randint(0, 1000)
+    arr.append(x)
+
+
+
+print("\n 1 - Бинарный поиск\n 2 - Поиск бинарным деревом\n 3 - Поиск Фиббоначи\n 4 - Интерполяционный поиск")
+x = int(input("Выберете номер поиска:\n"))
+
+if x == 1:
+    arr2 = arr.copy()
+    arr2.sort()
+    print(arr2)
+    print("\n 1 - Поиск элемента\n 2 - Добавление элемента\n 3 - Удаление элемента")
+    l = int(input("Выберете номер операции:\n"))
+    if l == 1:
+        z = int(input("Введите число для поиска: "))
+        print(binSearch(arr2, z))
+    elif l == 2:
+        z = int(input("Введите число для добавления: "))
+        arr2.append(z)
+        arr2.sort()
+        print(arr2)
+    elif l == 3:
+        z = int(input("Введите число для удаления: "))
+        if binSearch(arr2, z) == "Нет такого":
+            print("Нет такого")
+        else:
+            arr2.remove(z)
+            arr2.sort()
+            print(arr2)
+    else:
+        print('Выберете от 1 до 3')
+elif x == 2:
+    arr2 = arr.copy()
+    print(arr2)
+    print("\n 1 - Поиск элемента\n 2 - Добавление элемента\n 3 - Удаление элемента")
+    l = int(input("Выберете номер операции:\n"))
+    root = BinaryTree(arr[0])
+    for i in range (1, len(arr)):
+        root.insert(arr[i])
+    if l == 1:
+        z = int(input("Введите число для поиска: "))
+        print(root.search(z))
+    elif l == 2:
+        z = int(input("Введите число для добавления: "))
+        root.insert(z)
+    elif l == 3:
+        z = int(input("Введите число для удаления: "))
+        if root.search(z) == str(z) + " не найден":
+            print("Нет такого")
+        else:
+            print(arr2.remove(z))
+    else:
+        print('Выберете от 1 до 3')
+elif x == 3:
+    arr2 = arr.copy()
+    arr2.sort()
+    print(arr2)
+    print("\n 1 - Поиск элемента\n 2 - Добавление элемента\n 3 - Удаление элемента")
+    l = int(input("Выберете номер операции:\n"))
+    if l == 1:
+        z = int(input("Введите число для поиска: "))
+        print(fibSearch(arr2, z))
+    elif l == 2:
+        z = int(input("Введите число для добавления: "))
+        arr2.append(z)
+        arr2.sort()
+        print(arr2)
+    elif l == 3:
+        z = int(input("Введите число для удаления: "))
+        if fibSearch(arr2, z) == "Нет такого":
+            print("Нет такого")
+        else:
+            arr2.remove(z)
+            arr2.sort()
+            print(arr2)
+    else:
+        print('Выберете от 1 до 3')
+elif x == 4:
+    arr2 = arr.copy()
+    arr2.sort()
+    print(arr2)
+    print("\n 1 - Поиск элемента\n 2 - Добавление элемента\n 3 - Удаление элемента")
+    l = int(input("Выберете номер операции:\n"))
+    if l == 1:
+        z = int(input("Введите число для поиска: "))
+        print(interSearch(arr2, z))
+    elif l == 2:
+        z = int(input("Введите число для добавления: "))
+        arr2.append(z)
+        arr2.sort()
+        print(arr2)
+    elif l == 3:
+        z = int(input("Введите число для удаления: "))
+        if interSearch(arr2, z) == "Нет такого":
+            print("Нет такого")
+        else:
+            arr2.remove(z)
+            arr2.sort()
+            print(arr2)
+    else:
+        print('Выберете от 1 до 3')
+else:
+    print('Выберете от 1 до 4')

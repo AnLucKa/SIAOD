@@ -1,0 +1,65 @@
+def prefix_function (S) :
+	n = len(S)
+	res = []
+	res.append(0)
+	for i in range (1, n):
+		k = res[i-1]
+		while k > 0 and S[i] != S[k]:
+			k = res[k-1]
+		if S[i] == S[k]:
+			k += 1
+		res.append(k)
+	return res
+
+s = "aabcaabcd"
+sub = "cd"
+S = sub + "#" + s
+l = prefix_function(S)
+l2 = []
+for i in range (len(l)):
+	if l[i] == len(sub):
+		l2.append(i-2*len(sub) + 1)
+print(l2)
+
+
+S = "Алгоритм поиска строки Бойера — Мура — алгоритм общего назначения."
+sub = "Мур"
+def createD(sub):
+	d = {}
+	i = len(sub)-2
+	while i >= 0:
+		l = list(d.keys())
+		if l.count(sub[i]) > 0:
+			i -= 1
+			continue
+		d[sub[i]] = len(sub)-i-1
+		i -= 1
+	l = list(d.keys())
+	if l.count(sub[len(sub)-1]) == 0:
+		d[sub[len(sub)-1]] = len(sub)
+	l = 0
+	return d
+
+
+def boyerMurSearch(s, sub):
+	d = createD(sub)
+	l = list(d.keys())
+	i = 0
+	while True:
+		for j in range(len(sub)-1, -1, -1):
+			if j == len(sub) - 1:
+				if s[i + j] != sub[j]:
+					if s[i+j] not in l:
+						i += len(sub)
+					else:
+						i += d[s[i+j]]
+					break
+			else:
+				if s[i + j] != sub[j]:
+					i+= d[sub[j]]
+					break
+			if j == 0:
+				return i
+
+
+print(boyerMurSearch(S, sub))

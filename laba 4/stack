@@ -1,0 +1,239 @@
+class Stack:
+    def __init__(self):
+            self.stack = []
+
+    def push(self, item):
+            self.stack.append(item)
+
+    def pop(self):
+            if self.isEmpty == True:
+                return None
+            removed = self.stack.pop()
+            return removed
+
+    def peek(self):
+        return self.stack[-1]
+
+    def isEmpty(self):
+        if len(self.stack) == 0:
+            return True
+        return False
+
+A = Stack()
+B = Stack()
+C = Stack()
+i = 5
+while (i != 0):
+    A.push(i)
+    i -= 1
+print(A.stack)
+print(B.stack)
+print(C.stack)
+
+def tower(n, A, C, B): #C - цель, В - незамисимая ось А - откуда
+    if n == 2:
+        x = A.pop()
+        B.push(x)
+        x = A.pop()
+        C.push(x)
+        x = B.pop()
+        C.push(x)
+    if n>2:
+        tower(n-1, A, B, C)
+        x = A.pop()
+        C.push(x)
+        tower(n-1, B, C, A)
+
+tower(5, A, C, B)
+
+print(A.stack)
+print(B.stack)
+print(C.stack)
+
+print()
+print("Задание 4:")
+# задание 4
+
+str = "()(()()))()"
+def isBalanced(str):
+    N4 = Stack()
+    for i in range(len(str)):
+        if str[i] == "(" or str[i] == ")":
+            if N4.isEmpty() == True:
+                if str[i] == ")":
+                    return False
+                N4.push(str[i])
+                continue
+            if str[i] == ")" and N4.peek() == "(":
+                N4.pop()
+                continue
+            N4.push(str[i])
+    if N4.isEmpty() == False:
+        return False
+    return True
+print(isBalanced(str))
+
+print()
+print("Задание 6:")
+# задание 6
+str = "3 rfaa2413 tgjuwf  m a3 t46 75685;"
+s1 = Stack()
+s2 = Stack()
+s3 = Stack()
+for i in reversed(str):
+    if i.isdigit() == True:
+        s1.push(i)
+        continue
+    if i.isalpha() == True:
+        s2.push(i)
+        continue
+    s3.push(i)
+l1, l2, l3 = [], [], []
+while True:
+    if s1.isEmpty() == False:
+        l1.append(s1.pop())
+    if s2.isEmpty() == False:
+        l2.append(s2.pop())
+    if s3.isEmpty() == False:
+        l3.append(s3.pop())
+    if s1.isEmpty() == True and s2.isEmpty() == True and s3.isEmpty() == True:
+        break
+print(l1,l2,l3, sep ="\n")
+
+print()
+print("Задание 8:")
+# задание 8
+str = """Я – часть потерянного поколения
+И я отказываюсь верить, что
+Я могу изменить этот мир.
+Я понимаю, возможно, это шокирует вас, но
+«Счастье уже внутри тебя»
+– Это ложь, на самом деле.
+Деньги сделают меня счастливым
+И в тридцать лет я расскажу своему ребенку, что
+Он – не самая важная вещь в моей жизни.
+Мой босс будет знать, что
+Мои принципы:
+Работа
+Важнее, чем
+Семья
+Послушайте:
+С давних пор
+Люди живут семьями
+Но сейчас
+Общество никогда не будет таким, как прежде
+Эксперты говорят мне
+Через тридцать лет я буду праздновать десятилетие моего развода.
+Я не верю, что
+Я буду жить в стране, которую сам создам.
+В будущем
+Уничтожение природы станет нормой.
+Никто не верит, что
+Мы сохраним нашу прекрасную планету.
+И конечно
+Мое поколение уже потеряно.
+Глупо полагать, что
+Есть надежда."""
+N8 = Stack()
+l = str.split("\n")
+for i in l:
+    N8.push(i)
+l.clear()
+while N8.isEmpty() == False:
+    l.append(N8.pop())
+for i in l:
+    print(i)
+
+print()
+print("Задание 9:")
+# задание 9
+def computeLogic (str):
+    str1=""
+    stk= Stack()
+    for i in range (len(str)):
+        stk.push(str[i])
+    for i in range (len(str)):
+        if(stk.peek()=="T"):
+            str1 +="True "
+        if(stk.peek()=="F"):
+            str1+="False "
+        if(stk.peek()=="N"):
+            str1 += "Not is "
+        if(stk.peek()=="A" or stk.peek()=="*"):
+            str1+="and "
+        if(stk.peek()=="X"):
+            str1="!= " +str1
+        if(stk.peek()=="O" or stk.peek()=="+"):
+            str1+="or "
+        if(stk.peek()=="("):
+            str1+="( "
+        if(stk.peek()==")"):
+            str1+=")"
+        stk.pop()
+    print(eval(str1))
+computeLogic("TAF")
+
+print()
+print("Задание 10:")
+# задание 10
+def computeMinMax(str):
+    str1=""
+    stk= Stack()
+    for i in range (len(str)-1, -1, -1):
+        stk.push(str[i])
+    for i in range(len(str)):
+        if(stk.peek()=="0"):
+            str1+="0"
+        if(stk.peek()=="1"):
+            str1+="1"
+        if(stk.peek()=="2"):
+            str1+="2"
+        if(stk.peek()=="3"):
+            str1+="3"
+        if(stk.peek()=="4"):
+            str1+="4"
+        if(stk.peek()=="5"):
+            str1+="5"
+        if(stk.peek()=="6"):
+            str1+="6"
+        if(stk.peek()=="7"):
+            str1+="7"
+        if(stk.peek()=="8"):
+            str1+="8"
+        if(stk.peek()=="9"):
+            str1+="9"
+        if(stk.peek()=="M"):
+            str1+="max"
+        if(stk.peek()=="N"):
+            str1+="min"
+        if(stk.peek()==","or stk.peek()=="."):
+            str1+=","
+        if(stk.peek()=="("):
+            str1+="("
+        if(stk.peek()==")"):
+            str1+=")"
+        stk.pop()
+    print(eval(str1))
+computeMinMax("N(3,5)")
+
+
+print()
+print("Задание 11:")
+# задание 11
+def computeForm(str):
+    x=1
+    y=1
+    z=1
+    stk= Stack()
+    str1=""
+    for i in range(len(str) - 1, -1, -1):
+        stk.push(str[i])
+    for i in range(len(str)):
+        str1+=stk.pop()
+    try:
+        eval(str1)
+    except:
+        print("False")
+        return
+    print("True")
+computeForm("2 +(3+)")

@@ -1,0 +1,141 @@
+from collections import deque
+
+class Deque(object):
+    def __init__(self):
+        self._deque = deque()
+
+    def pushFront(self, key):
+        self._deque.appendleft(key)
+
+    def pushBack(self, key):
+        self._deque.append(key)
+
+    def popFront(self):
+        return self._deque.popleft() if self.size() else "error"
+
+    def popBack(self):
+        return self._deque.pop() if self.size() else "error"
+
+    def peekFront(self):
+        return self._deque[0] if self.size() else "error"
+
+    def peekBack(self):
+        return self._deque[-1] if self.size() else "error"
+
+    def size(self):
+        return len(self._deque)
+
+    def clear(self):
+        self._deque.clear()
+
+def s1_bigger_than_s2(s1, s2):
+    s1.lower()
+    s2.lower()
+    for i in range (len(s1)):
+        if s1[i] >s2[i]:
+            return True
+        if s1[i] < s2[i]:
+            return False
+
+def sort_str(l):
+    l1 = []
+    A = Deque()
+    B = Deque()
+    for i in range(len(l)):
+        if A.size() == 0:
+            A.pushBack(l[i])
+            continue
+        if s1_bigger_than_s2(A.peekBack(), l[i]) == False:
+            A.pushBack(l[i])
+            continue
+        if s1_bigger_than_s2(A.peekFront(), l[i]) == True:
+            A.pushFront(l[i])
+            continue
+        while s1_bigger_than_s2(A.peekBack(), l[i]) == True:
+            x = A.popBack()
+            B.pushFront(x)
+            x = A.popBack()
+            A.pushBack(x)
+        A.pushBack(l[i])
+        while B.size() >0:
+            x = B.popFront()
+            A.pushBack(x)
+    while A.size() >0:
+        x = A.popFront()
+        l1.append(x)
+    return l1
+
+
+print("Задание 1:")
+# задание 1
+book = ["Горе от ума", "Винни-Пух", "Волшебник Изумрудного города", "Алые паруса", "Три мушкетера", "Евгений Онегин", "Димон. Сказка для детей от 14 до 114 лет"]
+bookSorted = sort_str(book)
+print(bookSorted)
+
+print()
+print("Задание 2:")
+# задание 2
+N2 = Deque()
+str = "б нагна офхук"
+N2._deque.extend("абвгдеёжзийклмнопрстуфхцчшщъыьэюя")
+
+def dehash(str, D):
+    str1 = ""
+    for i in range(len(str)):
+        if str[i] == " ":
+            str1+= " "
+            continue
+        while len(str1)<=i:
+            if D.peekBack() == str[i]:
+                x = D.popBack()
+                D.pushFront(x)
+                x = D.popBack()
+                D.pushFront(x)
+                str1 += D.popBack()
+                D.pushBack(str1[i])
+            else:
+                x = D.popBack()
+                D.pushFront(x)
+    return str1
+
+print(dehash(str, N2))
+
+print()
+print("Задание 5:")
+# задание 5
+str = "[][[][]]["
+def isBalanced(str):
+    N5 = Deque()
+    for i in range(len(str)):
+        if str[i] == "[" or str[i] == "]":
+            if N5.size() == 0:
+                if str[i] == "]":
+                    return False
+                N5.pushBack(str[i])
+                continue
+            if str[i] == "]" and N5.peekBack() == "[":
+                N5.popBack()
+                continue
+            N5.pushBack(str[i])
+    if N5.size() > 0:
+        return False
+    return True
+print(isBalanced(str))
+
+print()
+print("Задание 7:")
+# задание 7
+numbers = [1,4,23,-1,-7,52,-7,-1,2, 3]
+l = []
+Zad_7 = Deque()
+for i in numbers:
+    if i>0:
+        Zad_7.pushFront(i)
+        continue
+    l.append(i)
+
+x = Zad_7.peekBack()
+while Zad_7.size() != 0:
+    l.append(Zad_7.popBack())
+    x = Zad_7.peekBack()
+print(l)

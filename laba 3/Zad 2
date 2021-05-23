@@ -1,0 +1,210 @@
+import random
+closed = []
+
+class LinkedList:
+    path = ""
+    def __init__(self, data):
+        self.next = None
+        self.data = data
+
+    def getParent(self):
+        return self.cameFrom
+
+    def solve(self):
+        n = self
+        if n.data.couldBeSolved() == 1:
+            print("Решения нет")
+            return
+        while n.data.solved() == False:
+            n.data.pprint()
+            n.next = LinkedList(n.data.childState())
+            n = n.next
+        n.data.pprint()
+
+    def append(self, val):
+        end = LinkedList(val)
+        n = self
+        while n.next:
+            n = n.next
+        n.next = end
+
+    def list(self):
+        l = []
+        n = self
+        while n.next:
+            l.append(n.data)
+            n = n.next
+        l.append(n.data)
+        return l
+
+class State:
+    def __init__(self, currentList, cameFrom):
+        self.currentList = currentList
+        self.cameFrom = cameFrom
+
+    def Matrix(self):
+        A = [0] * 4
+        for i in range(4):
+            A[i] = [0] * 4
+        n = 0
+        for i in range (4):
+            for g in range(4):
+                A[i][g] = self.currentList[n]
+                n += 1
+        return A
+
+    def couldBeSolved(self):
+        inv = 0
+        for i in range(16):
+            if self.currentList[i] != None:
+                for j in range (i):
+                    if self.currentList[j] != None:
+                        if self.currentList[j] > self.currentList[i]:
+                            inv += 1
+        str, sto = self.null_peace()
+        str += 1
+        return (str+inv) % 2
+
+
+
+    def null_peace(self): #метод находит пустой элемент
+        currentMatrix = self.Matrix()
+        for i in range(4):
+            for j in range(4):
+                if currentMatrix[i][j] == None :
+                    currentMatrix = 0
+                    return i, j
+
+    def childState(self):
+        r, el = self.null_peace()
+        #directs = ["U", "D", "L", "R"]
+        #directs.remove(self.cameFrom)
+        child = []
+        if r != 0 and self.cameFrom != "U":
+            newL = []
+            for i in range (16):
+                newL.append(self.currentList[i])
+                if self.currentList[i] == None:
+                    a, b = self.currentList[i-4], self.currentList[i]
+                    newL[i-4], newL[i] = b, a
+            Upper = State(newL, "D")
+            if closed.count(Upper.currentList) == 0:
+                child.append(Upper)
+                if Upper.solved():
+                    LinkedList.path += "U"
+                    return Upper
+        if r != 3 and self.cameFrom != "D":
+            newL = []
+            for i in range (16):
+                newL.append(self.currentList[i])
+                if self.currentList[i-4] == None:
+                    a, b = self.currentList[i-4], self.currentList[i]
+                    newL[i-4], newL[i] = b, a
+            Lower = State(newL, "U")
+            if closed.count(Lower.currentList) == 0:
+                child.append(Lower)
+                if Lower.solved():
+                    LinkedList.path += "D"
+                    return Lower
+        if el != 0 and self.cameFrom != "L":
+            newL = []
+            for i in range (16):
+                newL.append(self.currentList[i])
+                if self.currentList[i] == None:
+                    a, b = self.currentList[i-1], self.currentList[i]
+                    newL[i-1], newL[i] = b, a
+            Left = State(newL, "R")
+            if closed.count(Left.currentList) == 0:
+                child.append(Left)
+                if Left.solved():
+                    LinkedList.path += "L"
+                    return Left
+        if el != 3 and self.cameFrom != "R":
+            newL = []
+            for i in range(16):
+                newL.append(self.currentList[i])
+                if self.currentList[i-1] == None:
+                    a, b = self.currentList[i - 1], self.currentList[i]
+                    newL[i - 1], newL[i] = b, a
+            Right = State(newL, "L")
+            if closed.count(Right.currentList) == 0:
+                child.append(Right)
+                if Right.solved():
+                    LinkedList.path += "R"
+                    return Right
+        if (len(child)) == 0:
+            while True:
+                k = random.randint(0,3)
+                if k == 0:
+                    if r != 0 and self.cameFrom != "U":
+                        return Upper
+                    continue
+                if k == 1:
+                    if r != 3 and self.cameFrom != "D":
+                        return Lower
+                    continue
+                if k == 2:
+                    if el != 0 and self.cameFrom != "L":
+                        return Left
+                    continue
+                if k == 3:
+                    if el != 3 and self.cameFrom != "R":
+                        return Right
+                    continue
+
+
+        for i in range(len(child)):
+            k = child[i].h()
+            if i == 0:
+                minH = k
+            else:
+                if k < minH:
+                    closed.append(self.currentList)
+                    return child[i]
+        closed.append(self.currentList)
+        return child[0]
+
+    def h(self):
+        return (self.manhDist() + self.linConflict())
+
+    def manhDist(self):
+        A = self.Matrix()
+        distance = 0
+        for i in range(4):
+            for j in range(4):
+                if A[i][j] != None:
+                    x, y = divmod(A[i][j] - 1, 4)
+                    distance += abs(x - i) + abs(y - j)
+        return distance
+
+    def linConflict(self):
+        currentMatrix = self.Matrix()
+        conflict = 0
+        for i in range(4):
+            for j in range(3):
+                if currentMatrix[i][j] != None and currentMatrix[i][j + 1] != None:
+                    if currentMatrix[i][j] > currentMatrix[i][j + 1]:
+                        conflict += 2
+        return conflict
+
+
+
+    def pprint(self):
+        currentMatrix = self.Matrix()
+        for row in currentMatrix:
+            print(row)
+        print()
+        currentMatrix = 0
+
+    def solved(self):
+        return ''.join(map(str, self.currentList)) == '123456789101112131415None'
+
+
+pyatnashki = [[1, 2, 3, 4], [5, 6, 7, 8], [13, 9, 11, 12], [10, 14, 15, None]]
+pyatnashkiList = []
+for i in range(4):
+    for j in range(4):
+        pyatnashkiList.append(pyatnashki[i][j])
+StartState = State(pyatnashkiList, None)
+Puzzle = LinkedList(StartState)
+Puzzle.solve()

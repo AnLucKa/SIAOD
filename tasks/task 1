@@ -1,0 +1,70 @@
+#Задание 1
+l1 = [1,2,1]
+l1.sort()
+l1.reverse()
+while True:
+    if l1[0]< l1[1] + l1[2]:
+        print(l1[0] + l1[1]+l1[2])
+        break
+    if len(l1) == 3:
+        print(0)
+        break
+    l1.pop(0)
+
+#Задание 2
+l2 = [10,2]
+def find_num():
+    global l2
+    num = l2[0]
+    for i in range(1, len(l2)):
+        if (len(str(num)) < len(str(l2))):
+            num = compare(num, l2[i])
+        else:
+            num =compare(l2[i], num)
+    l2.remove(num)
+    return str(num)
+
+def compare(a, b):
+    str1 = str(a)
+    str2 = str(b)
+    for i in range(len(str1)):
+        if int(str1[i]) > int(str2[i]):
+            return int(str1)
+        if int(str1[i]) < int(str2[i]):
+            return int(str2)
+    for i in range(len(str1), len(str2)):
+        if str2[i+len(str1) - 1] > str1[len(str1)-1]:
+            return int(str2)
+        if str2[i + len(str1) - 1] < str1[len(str1)-1]:
+            return int(str1)
+    return str1
+
+res = ""
+for j in range(len(l2)):
+    res+=find_num()
+print(res)
+
+#Задание 3
+l3 =  [[11, 25, 66, 1, 69, 7], [23, 55, 17, 45, 15, 52], [75, 31, 36,
+44, 58, 8], [22, 27, 33, 25, 68, 4], [84, 28, 14, 11, 5, 50]]
+N = len(l3)
+M = len(l3[0])
+sorting = []
+for j in range(-(N - 1), M):
+    for i in range(N):
+        row, col = i, i + j
+        if 0 <= row < len(l3) and 0 <= col < len(l3[0]):
+            sorting.append(l3[i][i+j])
+    sorting.sort()
+    row, col = 0, 0 + j
+    for i in range(len(sorting)):
+        while True:
+            if 0 <= row < len(l3) and 0 <= col < len(l3[0]):
+                l3[row][col] = sorting[i]
+                row+= 1
+                col+= 1
+                break
+            row+= 1
+            col+= 1
+    sorting.clear()
+print(l3)

@@ -1,0 +1,68 @@
+from itertools import permutations
+
+#Задание 1
+def compareStr(s1, s2):
+    for i in range(len(s1)):
+        if s1[i] > s2[i]:
+            return 0
+    return 1
+
+s1 = "abc"
+s2 = "xya"
+correct = False
+for str1 in permutations(s1):
+    for str2 in permutations(s2):
+        if compareStr(str1, str2) == 1:
+            correct = True
+            break
+print(correct)
+
+
+#Задание 2
+def isPalindrome(str):
+    for i in range(0, len(str) // 2):
+        if str[i] != str[len(str) - i - 1]:
+            return False
+    return True
+
+
+s1 = "babad"
+def findMaxPalindrom(s1):
+    res = []
+    lastRes = []
+    for i in range(1, len(s1)-1):
+        for j in range(len(s1)-(i-1)):
+            s = s1[j:j+i:1]
+            if isPalindrome(s) == True:
+                res.append(s)
+        if res == []:
+            continue
+        lastRes = res
+        res = []
+    return set(lastRes)
+
+print(findMaxPalindrom(s1))
+
+
+#Задание 3
+def isСoncatenation(str):
+    if len(str) % 2 == 1:
+        return False
+    for i in range(0, len(str) // 2):
+        if str[i] != str[len(str) // 2 + i]:
+            return False
+    return True
+
+
+s1 = "abcabcabc"
+def findMaxPalindrom(s1):
+    res = []
+    lastRes = []
+    for i in range(2, len(s1)-1):
+        for j in range(len(s1)-(i-1)):
+            s = s1[j:j+i:1]
+            if isСoncatenation(s) == True:
+                res.append(s)
+    return len(set(res))
+
+print(findMaxPalindrom(s1))

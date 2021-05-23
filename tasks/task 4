@@ -1,0 +1,19 @@
+from functools import cmp_to_key
+
+def compare_function(a, b):
+    if a == b:
+        return 0
+    if a > b:
+        return -1
+    if a < b:
+        return 1
+piles = [9,8,7,6,5,1,2,3,4]
+piles.sort(key = cmp_to_key(compare_function))
+
+res = 0
+while len(piles) != 0:
+    piles.pop(-1)
+    piles.pop(0)
+    res += piles.pop(0)
+
+print(res)

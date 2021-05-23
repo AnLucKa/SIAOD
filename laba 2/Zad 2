@@ -1,0 +1,74 @@
+import random
+
+def hashCode(len, el):
+    return el % len
+
+def sReHash(len, el, j):
+    return (hashCode(len,el)+j) % len
+
+class LinkedList:
+    def __init__(self, data):
+        self.next = None
+        self.data = data
+
+    def append(self, val):
+        end = LinkedList(val)
+        n = self
+        while n.next:
+            n = n.next
+        n.next = end
+
+    def list(self):
+        l = []
+        n = self
+        while n.next:
+            l.append(n.data)
+            n = n.next
+        l.append(n.data)
+        return l
+
+n = int(input("Введите размера массива: "))
+arr = []
+for i in range (n):
+    x = random.randint(0, 1000)
+    arr.append(x)
+d = {}
+print(arr)
+
+for i in range (n):
+    k = hashCode(len(arr), arr[i])
+    j = 0
+    while list(d.keys()).count(k) > 0:
+        j += 1
+        k = sReHash(len(arr), arr[i], j)
+    d[k] = arr[i]
+
+print(d)
+
+n = int(input("Введите размера массива: "))
+arr = []
+for i in range (n):
+    x = random.randint(0, 1000)
+    arr.append(x)
+print(arr)
+d={}
+
+for i in range (n):
+    k = hashCode(len(arr), arr[i])
+    if list(d.keys()).count(k) > 0:
+        if type(d[k]) == LinkedList:
+            d[k].append(arr[i])
+        else:
+            ll = LinkedList(d[k])
+            ll.append(arr[i])
+            d[k] = ll
+    else:
+        d[k] = arr[i]
+
+for i in d.keys():
+    c = str(i) + " "
+    if type(d[i]) == LinkedList:
+        c += str(d[i].list())
+    else:
+        c += str(d[i])
+    print(c)

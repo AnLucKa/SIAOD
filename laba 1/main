@@ -1,0 +1,92 @@
+package com.company;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        System.out.println("Hello world!");
+        System.out.println();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите длину массива: ");
+        int width;
+        int height;
+        String vvod1 = scanner.nextLine();
+        if (vvod1 == "") {
+            width = 50;
+        }
+        else {
+            width = Integer.parseInt(vvod1);
+        }
+        System.out.println("Введите высоту массива: ");
+        String vvod2 = scanner.nextLine();
+        if (vvod2 == "") {
+            height = 50;
+        }
+        else {
+            height = Integer.parseInt(vvod2);
+        }
+        System.out.println();
+        final int minValue = -250;
+        final int maxValue = 1008;
+        int[][] arr = new int[height][width];
+        arr = OurArrayGenerator.CreateRandomMatrix(arr, minValue, maxValue);
+        int[][] arr1 = arr;
+        System.out.println();
+        System.out.println("Введите номер задания: ");
+        System.out.println("1) Выбором");
+        System.out.println("2) Вставкой");
+        System.out.println("3) Обменом");
+        System.out.println("4) Сортировка Шелла");
+        System.out.println("5) Быстрая");
+        System.out.println("6) Пирамидальная");
+        byte m = scanner.nextByte();
+        while (m != 0) {
+            switch (m) {
+                case 1: {
+                    MassivSort.sort1(arr);
+                    MassivSort.massivOut(arr);
+                    arr = arr1;
+                    break;
+                }
+                case 2: {
+                    MassivSort.sort2(arr);
+                    MassivSort.massivOut(arr);
+                    arr = arr1;
+                    break;
+                }
+                case 3: {
+                    MassivSort.sort3(arr);
+                    MassivSort.massivOut(arr);
+                    arr = arr1;
+                    break;
+                }
+                case 4: {
+                    MassivSort.sort4(arr);
+                    MassivSort.massivOut(arr);
+                    arr = arr1;
+                    break;
+                }
+                case 5: {
+                    MassivSort.sort5(arr);
+                    MassivSort.massivOut(arr);
+                    arr = arr1;
+                    break;
+                }
+                case 6: {
+                    MassivSort.sort6(arr);
+                    MassivSort.massivOut(arr);
+                    arr = arr1;
+                    break;
+                }
+                default: {
+                    System.out.println("Введите номер задания от 1 до 7\n\n");
+                }
+
+            }
+            System.out.println();
+            System.out.println("Введите номер задания: ");
+            m = scanner.nextByte();
+        }
+
+    }
+}
